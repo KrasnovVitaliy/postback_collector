@@ -10,7 +10,5 @@ class Config(ConfigBase):
     LOG_LEVEL = logging.DEBUG
     LOG_FILE = None
 
-    STORE_NONE_WPROSZAIM = True
-
     DB_URI = 'sqlite:///data.db'
     CELERY_BROKER_URL = 'redis://localhost:6379/0'
