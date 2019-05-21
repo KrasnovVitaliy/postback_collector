@@ -32,7 +32,9 @@ def create_event(cid, ds, dr, cn, gclid, ti, ta, tr, cd1, cd2, cd3, cd4, tid=DEF
         'cd4': cd4,
     }
     encoded_data = urlencode(data)
-    encoded_data += "&z={}".format(randint(0, RANDOM_RANGE))
+    # encoded_data += "&z={}".format(randint(0, RANDOM_RANGE))
+
+    logger.info("Encoded request data:\n{}".format(encoded_data))
     return encoded_data
 
 
@@ -63,3 +65,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

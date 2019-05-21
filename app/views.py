@@ -38,7 +38,7 @@ class AddConversionView(web.View):
         db.session.add(conversion)
         db.session.commit()
 
-        logger.debug("Are fields source aff_sub1 status present and have correct valuese")
+        logger.debug("Are fields source aff_sub1 status present and have correct values")
 
         if conversion.source != PROCESSING_SOURCE:
             logger.debug("Conversion source is {} process only {}".format(conversion.source, PROCESSING_SOURCE))
@@ -71,29 +71,53 @@ class ConversionsView(web.View):
         params = self.request.rel_url.query
         logger.debug('Received params: {}'.format(params))
 
-        if 'limit' in params:
-            conversions = db.session.query(db.Conversions).order_by(db.Conversions.id.desc()).limit(params['limit'])
-        else:
-            conversions = db.session.query(db.Conversions).order_by(db.Conversions.id.desc()).all()
-        rsp = [obj.to_json() for obj in conversions]
+        filters = {}
+        for key in params:
+            filters[key] = params[key]
 
-        logger.debug('Get request processed')
+        limit_count = -1
+        if 'limit' in params:
+            del filters['limit']
+            limit_count = params['limit']
+
+        sort_direction = db.Conversions.id.desc()
+        if 'sort' in params:
+            del filters['sort']
+            if params['sort'] == 'asc':
+                sort_direction = db.Conversions.id.asc()
+
+        conversions = db.session.query(db.Conversions).filter_by(**filters).order_by(sort_direction).limit(
+            limit_count).all()
+        rsp = [obj.to_json() for obj in conversions]
         return web.json_response(rsp)
-#
-#
-# class ConversionsProcessingView(web.View):
-#     async def get(self):
-#         logger.debug("Receive conversions list get request")
-#         params = self.request.rel_url.query
-#         logger.debug('Received params: {}'.format(params))
-#
-#         if 'limit' in params:
-#             conversions_processing = db.session.query(db.ConversionsProcessing).order_by(
-#                 db.Conversions.id.desc()).limit(params['limit'])
-#         else:
-#             conversions_processing = db.session.query(db.ConversionsProcessing).order_by(db.Conversions.id.desc()).all()
-#
-#         rsp = [obj.to_json() for obj in conversions_processing]
-#
-#         logger.debug('Get request processed')
-#         return web.json_response(rsp)
+
+
+class ConversionsProcessingView(web.View):
+    async def get(self):
+        logger.debug("Receive conversions processing list get request")
+        params = self.request.rel_url.query
+        logger.debug('Received params: {}'.format(params))
+
+        filters = {}
+        for key in params:
+            filters[key] = params[key]
+
+        limit_count = -1
+        if 'limit' in params:
+            del filters['limit']
+            limit_count = params['limit']
+
+        sort_direction = db.ConversionsProcessing.id.desc()
+        if 'sort' in params:
+            del filters['sort']
+            if params['sort'] == 'asc':
+                sort_direction = db.ConversionsProcessing.id.asc()
+
+        conversions_processing = db.session.query(db.ConversionsProcessing).filter_by(**filters).order_by(
+            sort_direction).limit(
+            limit_count).all()
+        rsp = [obj.to_json() for obj in conversions_processing]
+        for i in rsp:
+            i['conversions_link'] = "http://{}:{}/conversions?id={}".format(
+                config.PUBLIC_HOST, config.PORT, i['conversions_id'])
+        return web.json_response(rsp)

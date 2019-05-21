@@ -36,6 +36,7 @@ def process_conversion(record_id):
         browser_device=conversion.browser_device
     )
 
+    logger.debug("Ret code: {} data: {}".format(status_code, rsp_text ))
     conversion.is_processed = True
     if status_code == 200:
         logger.info('Conversion {} processed successfully'.format(conversion.id))

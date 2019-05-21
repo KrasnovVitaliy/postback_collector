@@ -8,5 +8,5 @@ routes = [
     web.view('/', AddConversionView),
     web.view('/config', ConfigsView),
     web.view('/conversions', ConversionsView),
-    # web.view('/conversions_processing', ConversionsProcessingView),
+    web.view('/conversions_processing', ConversionsProcessingView),
 ]
