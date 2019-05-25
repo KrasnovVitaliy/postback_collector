@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 app = Celery('conversion_processing_tasks', broker=config.CELERY_BROKER_URL)
 
+DEFAULT_PAYOUT_VALUE = 50
 
 @app.task
 def process_conversion(record_id):
@@ -23,6 +24,7 @@ def process_conversion(record_id):
     db.session.add(conversion_processing_obj)
     db.session.commit()
 
+    # Update payout if needed
     status_code, rsp_text = gads_client.send_event_attribution(
         aff_sub2=conversion.aff_sub2,
         aff_sub3=conversion.aff_sub3,
@@ -31,7 +33,7 @@ def process_conversion(record_id):
         source=conversion.source,
         referrer=conversion.referrer,
         offer_id=conversion.offer_id, offer_name=conversion.offer_name,
-        payout=conversion.payout,
+        payout=conversion.payout if int(conversion.payout) > 0 else DEFAULT_PAYOUT_VALUE,
         conversion_id=conversion.conversion_id, created=conversion.created, payout_type=conversion.payout_type,
         browser_device=conversion.browser_device
     )

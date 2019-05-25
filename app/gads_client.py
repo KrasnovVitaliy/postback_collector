@@ -11,9 +11,11 @@ GADS_ENDPOINT = 'https://www.google-analytics.com/collect'
 DEFAULT_TID = 'UA-136208181-2'
 DEFAULT_T = 'transaction'
 RANDOM_RANGE = 999999
+DEFAULT_CU = 'RUB'
 
 
-def create_event(cid, ds, dr, cn, gclid, ti, ta, tr, cd1, cd2, cd3, cd4, tid=DEFAULT_TID, t=DEFAULT_T, v=1):
+def create_event(cid, ds, dr, cn, gclid, ti, ta, tr, cd1, cd2, cd3, cd4, tid=DEFAULT_TID, t=DEFAULT_T, v=1,
+                 cu=DEFAULT_CU):
     data = {
         'v': v,
         'tid': tid,
@@ -30,6 +32,7 @@ def create_event(cid, ds, dr, cn, gclid, ti, ta, tr, cd1, cd2, cd3, cd4, tid=DEF
         'cd2': cd2,
         'cd3': cd3,
         'cd4': cd4,
+        'cu': cu,
     }
     encoded_data = urlencode(data)
     # encoded_data += "&z={}".format(randint(0, RANDOM_RANGE))
@@ -65,5 +68,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

@@ -21,6 +21,6 @@ def send_email(receiver, subject, text):
         server.sendmail(config.EMAIL_USERNAME, [receiver], body)
         logger.debug("Email to {} with subject: {} sent".format(receiver, subject))
     except Exception as e:
-        logger.error("Coul not send email. Error: {}".format(e))
+        logger.error("Could not send email. Error: {}".format(e))
 
     server.quit()

@@ -9,7 +9,7 @@ config = Config()
 
 PROCESSING_SOURCE = 'wproszaim'
 PROCESSING_AFF_SUB1 = 'gAds'
-PROCESSING_STATUS = 'approved'
+PROCESSING_STATUSES = ['approved', 'pending']
 
 
 class ConfigsView(web.View):
@@ -54,8 +54,8 @@ class AddConversionView(web.View):
             db.session.commit()
             return web.HTTPOk()
 
-        if conversion.status != PROCESSING_STATUS:
-            logger.debug("Conversion status is {} process only {}".format(conversion.status, PROCESSING_STATUS))
+        if conversion.status not in PROCESSING_STATUSES:
+            logger.debug("Conversion status is {} process only {}".format(conversion.status, PROCESSING_STATUSES))
             logger.debug("Skip processing")
             conversion.error = 'incorrect status'
             db.session.commit()
