@@ -33,7 +33,7 @@ def process_conversion(record_id):
         source=conversion.source,
         referrer=conversion.referrer,
         offer_id=conversion.offer_id, offer_name=conversion.offer_name,
-        payout=conversion.payout if int(conversion.payout) > 0 else DEFAULT_PAYOUT_VALUE,
+        payout=conversion.payout if float(conversion.payout) > 0 else DEFAULT_PAYOUT_VALUE,
         conversion_id=conversion.conversion_id, created=conversion.created, payout_type=conversion.payout_type,
         browser_device=conversion.browser_device
     )
@@ -43,7 +43,9 @@ def process_conversion(record_id):
     if status_code == 200:
         logger.info('Conversion {} processed successfully'.format(conversion.id))
         conversion_processing_obj.status = 'ok'
+        conversion_processing_obj.process_response = rsp_text
     else:
         conversion_processing_obj.status = 'error'
+        conversion_processing_obj.process_response = rsp_text
         logger.error('Error in conversion {} processing: {}'.format(conversion.id, rsp_text))
     db.session.commit()

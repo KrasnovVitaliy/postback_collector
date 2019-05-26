@@ -84,11 +84,13 @@ class ConversionsProcessing(Base):
     eventTime = Column(String(50))
     conversions_id = Column(Integer, ForeignKey("conversions.id"))
     status = Column(String(20))
+    process_response = Column(String(500))
 
-    def __init__(self, eventTime='', conversions_id='', status=''):
+    def __init__(self, eventTime='', conversions_id='', status='', process_response=''):
         self.eventTime = eventTime
         self.conversions_id = conversions_id
         self.status = status
+        self.process_response = process_response
 
     def serialize(self, to_serialize):
         d = {}
@@ -100,7 +102,7 @@ class ConversionsProcessing(Base):
         return d
 
     def to_json(self):
-        to_serialize = ['id', 'create_date', 'eventTime', 'conversions_id', 'status']
+        to_serialize = ['id', 'create_date', 'eventTime', 'conversions_id', 'status', 'process_response']
         return self.serialize(to_serialize)
 
 
