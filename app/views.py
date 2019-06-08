@@ -9,7 +9,7 @@ config = Config()
 
 PROCESSING_SOURCE = 'wproszaim'
 PROCESSING_AFF_SUB1 = 'gAds'
-PROCESSING_STATUSES = ['approved', 'pending']
+PROCESSING_STATUSES = ['approved']  # , 'pending'
 
 
 class ConfigsView(web.View):
